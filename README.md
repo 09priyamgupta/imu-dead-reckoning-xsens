@@ -9,8 +9,8 @@ Reconstructing Robot Motion Using Madgwick Filter + ZUPT + Drift Correction
 ---
 
 ## Overview
-This project reconstructs a robot’s trajectory using only IMU data recorded from an **Xsens MTi-630** sensor.  
-Dead‑reckoning is performed using orientation estimation (Madgwick filter), frame transformations, gravity compensation, Zero‑Velocity Updates (ZUPT), and drift‑corrected velocity/position integration.
+This project reconstructs a robot's trajectory using only IMU data recorded from an **Xsens MTi-630** sensor.  
+Dead-reckoning is performed using orientation estimation (Madgwick filter), frame transformations, gravity compensation, Zero-Velocity Updates (ZUPT), and drift-corrected velocity/position integration.
 
 Two datasets are processed, corresponding to two robot motion trials inside a building:
 - [Dataset 1 (small motion)](imu_data/xsens_mti_630_imu_first.txt)
@@ -23,12 +23,12 @@ Two datasets are processed, corresponding to two robot motion trials inside a bu
 - Convert **SampleTimeFine** timestamps into seconds  
 - Estimate accelerometer, gyroscope, magnetometer biases  
 - Convert IMU measurements **from ENU -> NED**  
-- Apply **Madgwick 9‑DoF orientation filter**  
+- Apply **Madgwick 9-DoF orientation filter**  
 - Convert acceleration from **body frame -> world frame**  
 - Subtract gravity to compute **linear acceleration**  
 - Detect stationary phases using **ZUPT**  
 - Integrate acceleration -> velocity (with resets)  
-- Correct long‑term drift using interpolation  
+- Correct long-term drift using interpolation  
 - Integrate velocity -> position  
 - Plot final **2D trajectories** for Dataset 1 & 2  
 
@@ -48,32 +48,32 @@ Using first 2 seconds (robot stationary):
 - Gyroscope bias  
 - Magnetometer bias  
 
-### 3️. Coordinate Transform
+### 3. Coordinate Transform
 Convert Xsens output from **ENU -> NED** so it matches the navigation frame used by Madgwick.
 
-### 4️. Orientation Estimation
+### 4. Orientation Estimation
 Madgwick **updateMARG()** is applied to obtain quaternion attitude in NED.
 
-### 5️. Body -> World Acceleration
+### 5. Body -> World Acceleration
 Apply rotation matrix:
 ```
 a_world = R_b2w * a_body
 ```
 
-### 6️. Gravity Removal
+### 6. Gravity Removal
 Because XSens already removes gravity, `linacc = acc_world_raw` is used directly.
 
-### 7️. ZUPT – Zero Velocity Update
+### 7. ZUPT - Zero Velocity Update
 Stationary frames are detected using:
 - |acc| < threshold  
 - |gyro| < threshold  
 
 Velocity is reset at those indices.
 
-### 8️. Drift Correction
+### 8. Drift Correction
 Linear interpolation between first & last stationary segments.
 
-### 9️. Position Integration
+### 9. Position Integration
 Velocity integrated again to obtain displacement.
 
 ---
@@ -84,14 +84,14 @@ Velocity integrated again to obtain displacement.
 - Robot moves forward  
 - Makes a gradual curved path  
 - Returns near the origin  
-- Small drift remains as expected for IMU‑only motion  
+- Small drift remains as expected for IMU-only motion  
 
 ### Dataset 2 Behavior
 - Longer run with more turning  
 - Robot descends a hallway  
 - Turns sharply  
 - Moves back and forth  
-- Ends far from starting point due to long‑distance drift  
+- Ends far from starting point due to long-distance drift  
 
 (Plots included in notebook.)
 
@@ -109,6 +109,6 @@ data/
 This project uses:
 - **AHRS library** for Madgwick filtering  
 - **SciPy** for quaternion and rotation operations  
-- Original Xsens MTi‑630 IMU datasets  
+- Original Xsens MTi-630 IMU datasets  
 
 ---
